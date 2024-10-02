@@ -4,7 +4,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import Colors from '../constants/Colors'
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import FlashMessage from "react-native-flash-message";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -52,6 +52,8 @@ export default function RootLayoutNav() {
             )
          }} />
       </Stack>
+            {/* GLOBAL FLASH MESSAGE COMPONENT INSTANCE */}
+            <FlashMessage position="top" />
     </BottomSheetModalProvider>
   );
 }

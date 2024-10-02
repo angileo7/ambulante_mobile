@@ -3,7 +3,7 @@
 import { createWithEqualityFn } from 'zustand/traditional'
 import { InitialStateProps } from './interfaces';
 import * as Keychain from 'react-native-keychain';
-import AxiosConfig from '@app/utils/axiosConfig';
+import AxiosConfig from '../../utils/axiosConfig';
 
 const initialState = {
     user: null,
@@ -49,28 +49,27 @@ const useAuthStore = createWithEqualityFn<InitialStateProps>()((set) => {
             set((state) => ({ ...state, loading: false, success: false, error: null }));
         },
 
-        login: async ({ phone, password }) => {
+        login: async ({ email, password }) => {
             set((state) => ({ ...state, loading: true }));
 
-            AxiosConfig.get('/login', {
-                headers: { phone_number: phone, pw: password }
+            AxiosConfig.post('/session/login', {
+                email, password
             })
                 .then(async (loginResponse) => {
                     const userData = loginResponse.data;
-
+/*                     await Keychain.setInternetCredentials(
+                        'user', 'user', JSON.stringify(userData.username)
+                    ); */
                     await Keychain.setInternetCredentials(
-                        'user', 'user', JSON.stringify(userData.user)
-                    );
-                    await Keychain.setInternetCredentials(
-                        'accessToken', 'accessToken', userData.access_token
-                    );
+                        'accessToken', 'accessToken', userData.token
+                    ); 
 
                     set((state) => ({
                         ...state,
                         error: null,
                         success: true,
-                        user: userData.user,
-                        accessToken: userData.access_token
+                        user: userData.username,
+                        accessToken: userData.token
                     }));
                 })
                 .catch((errorResponse) => {

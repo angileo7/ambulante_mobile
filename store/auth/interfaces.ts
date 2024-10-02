@@ -8,7 +8,7 @@ export interface RegisterProps {
   }
   
   export interface LoginProps {
-    phone: string,
+    email: string,
     password: string
   }
   

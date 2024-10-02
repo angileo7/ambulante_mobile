@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import { ActivityIndicator } from 'react-native';
 import {  useNavigation } from 'expo-router';
@@ -15,11 +15,27 @@ import MsgBox from '../Components/Texts/MsgBox';
 import RegularButton from '../Components/Buttons/RegularButton';
 import PressableText from '../Components/Texts/PressableText';
 import RowContainer from '../Components/Containers/RowContainer';
+import { showMessage } from 'react-native-flash-message';
+import { useAuthFacade } from '../store/auth/useAuthFacade';
 
 const Login = () => {
   const navigation = useNavigation()
+  const { login, loading, success, error, resetStore } = useAuthFacade();
   const [message, setMessage] = useState('');
   const [isSuccessMessage, setIsSuccessMessage] = useState(false);
+
+  useEffect(() => {
+    resetStore();
+
+    if (success) {
+        showMessage({ message: 'User Registered Successfully', type: 'success' });
+       // setTimeout(() => navigation.replace('LoginScreen'), 2000);
+    }
+
+    if (error) {
+        showMessage({ message: error, type: 'success' });
+    }
+}, [error, navigation, resetStore, success])
 
   const moveTo = (screen, payload) => {
     navigation.navigate(screen, { ...payload });
@@ -28,12 +44,11 @@ const Login = () => {
   const handleLogin = async (credentials, setSubmitting) => {
     try {
       setMessage(null);
-
       // call backend
-
+       login(credentials); 
       // move to next page
         //moveTo('order');
-        navigation.navigate('dashboard');
+   //     navigation.navigate('dashboard');
       setSubmitting(false);
     } catch (error) {
       setMessage('Login failed: ' + error.message);

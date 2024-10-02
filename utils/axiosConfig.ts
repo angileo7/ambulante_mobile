@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAuthStoreAxiosState } from '@app/store/auth/useAuthFacade';
+import { useAuthStoreAxiosState } from '../store/auth/useAuthFacade';
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://localhost:4000/api',
+    baseURL: 'http://localhost:3500/',
     withCredentials: true
 });
 
