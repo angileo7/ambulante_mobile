@@ -1,6 +1,7 @@
 import { View, Text, FlatList,StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import useBasketStore from '../store/basket'
+import { useOrderStore } from '../store/order'
 import Colors from '../constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ConfettiCannon from 'react-native-confetti-cannon';
@@ -10,6 +11,7 @@ import GmailStyleSwipeableRow from '../Components/Swipe'
 
 const Basket = () => {
     const {items, total, clearCart, products,reduceProduct,addProduct} = useBasketStore()
+    const { createOneOrder, updateOneOrder } = useOrderStore();
     const [order, setOrder] = useState(false)
 
     const Fee = {
@@ -18,6 +20,9 @@ const Basket = () => {
     }
 
     const checkout = () => {
+      createOneOrder({
+        products: products
+      })
         setOrder(true)
         clearCart()
     }
@@ -58,16 +63,6 @@ const Basket = () => {
                 </View>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 16, backgroundColor: '#fff'}}>
-                    <Text style={{ fontSize:16, color:Colors.medium}}>Service Fee</Text>
-                    <Text style={{ fontSize:16, color:Colors.medium}}>$ {Fee.service}</Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 16, backgroundColor: '#fff'}}>
-                    <Text style={{ fontSize:16, color:Colors.medium}}>Delivery Fee</Text>
-                    <Text style={{ fontSize:16, color:Colors.medium}}>$ {Fee.delivery}</Text>
-                </View>
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 16, backgroundColor: '#fff'}}>
                     <Text style={{ fontSize:16, color:Colors.mediumDark, fontWeight: 'bold'}}>Total Order</Text>
                     <Text style={{ fontSize:16, color:Colors.mediumDark,fontWeight: 'bold'}}>$ {(total + Fee.service + Fee.delivery).toFixed(2)}</Text>
                 </View>
@@ -79,7 +74,6 @@ const Basket = () => {
             <SafeAreaView edges={['bottom']} style={{backgroundColor: '#fff'}}>
                 <TouchableOpacity style={styles.btn} onPress={checkout} >
                     <Text style={styles.btnTxt}>Place Order</Text>
-
                 </TouchableOpacity>
             </SafeAreaView> 
           </View>

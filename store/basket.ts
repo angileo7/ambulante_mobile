@@ -1,12 +1,6 @@
 import {create } from 'zustand';
+import {Product} from '../types/product/types';
 
-export interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    info: string;
-    image?: any;
-}
 
 export interface BasketState {
     products: Array<Product & { quantity: number }>;
@@ -47,7 +41,7 @@ const useBasketStore = create<BasketState>()((set, get) => ({
         return {
           products: state.products
             .map((p) => {
-              if (p.id === product.id) {
+              if (p._id === product._id) {
                 p.quantity -= 1;
               }
               return p;

@@ -5,9 +5,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 const OrderItem = (props) => {
     const getDescription = (products: Product[]): string => {
-        const counts = {};
-        products.forEach(function (product: Product) { counts[product.title] = (counts[product.title] || 0) + 1 })
-        return Object.keys(counts).map(key => `${counts[key]} ${key}`).join(", ");
+        let content = '';
+       // const counts = {};
+        // products.forEach(function (product: Product) { counts[product.title] = (counts[product.title] || 0) + 1 })
+        // return Object.keys(counts).map(key => `${counts[key]} ${key}`).join(", ");
+        products.forEach(function (product: Product) { content = content + `${product.quantity} ${product.title}, `})
+        return content;
     };
 
     return (

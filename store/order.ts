@@ -34,9 +34,14 @@ export const useOrderStore = create<OrderStore>()((set) => ({
     },
     createOneOrder: async (newProduct: Order) => {
         set((state) => ({ ...state, loading: true }));
-        AxiosConfig.post('/orders')
+        AxiosConfig.post('/orders', {
+            client: '6640869761756c4ab7faa4c9',
+            products: [...newProduct.products],
+            owner_name: 'owner from app XD',
+            description: 'from app XD'
+        })
             .then((response) => {
-                set((state) => ({ ...state, error: null, success: true, orders: [...state.orders, response.data ]}));
+                //set((state) => ({ ...state, error: null, success: true, orders: [...state.orders, response.data ]}));
             })
             .catch((errorResponse) => {
                 set((state) => ({
@@ -51,7 +56,7 @@ export const useOrderStore = create<OrderStore>()((set) => ({
     },
     updateOneOrder: async (updatedProduct: Order) => {
         set((state) => ({ ...state, loading: true }));
-        AxiosConfig.post('/orders')
+        AxiosConfig.put('/orders')
             .then((response) => {
                 set((state) => ({ ...state, error: null, success: true, orders: [...state.orders, response.data ]}));
             })
@@ -68,9 +73,12 @@ export const useOrderStore = create<OrderStore>()((set) => ({
     },
     deleteOneOrder: async (id: string) => {
         set((state) => ({ ...state, loading: true }));
-        AxiosConfig.post('/orders')
+        AxiosConfig.delete('/orders/'+id)
             .then((response) => {
-                set((state) => ({ ...state, error: null, success: true, orders: []}));
+                set((state) => { 
+                    return {
+                        orders: state.orders.filter(ele => ele._id != id)}
+                    })
             })
             .catch((errorResponse) => {
                 set((state) => ({

@@ -4,15 +4,14 @@ import OrderItem from '../Components/List/OrderItem'
 import { useOrderStore } from 'store/order';
 
 const Page = () => {
-  const [tasks, setTasks] = useState(['BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2']);
-  const {orders, loadOrders} = useOrderStore();
+  const {orders, loadOrders, deleteOneOrder} = useOrderStore();
 
   useEffect(() => {
     loadOrders();
   }, []);
 
-  const deleteTask = (deleteIndex) => {
-    setTasks(tasks.filter((value, index) => index != deleteIndex));
+  const deleteTask = (deleteIndex: string) => {
+    deleteOneOrder(deleteIndex)
   }
 
   return (
@@ -20,12 +19,13 @@ const Page = () => {
         <Text style={styles.heading}>Orders</Text>
       <ScrollView style={styles.scrollView}>
         {
-        orders && orders.length >0 && orders.map((order, index) => {
-          return (
+        orders.map((order, index) => {
+          
+          return order.status != 'completed' ?  (
             <View key={index} style={styles.taskContainer}>
-              <OrderItem index={index + 1} order={order} deleteTask={() => deleteTask(index)}/>
+              <OrderItem index={index + 1} order={order} deleteTask={() => deleteTask(order._id)}/>
             </View>
-          );
+          ) : null;
         })
       }
       </ScrollView>

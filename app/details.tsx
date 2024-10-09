@@ -99,10 +99,10 @@ const Details = () => {
       stickyHeaderHeight={120}
       contentBackgroundColor={Colors.lightGrey}
       renderStickyHeader={() => <View key='sticky-header' style={styles.headerStick}>
-        <Text style={styles.stickyText}>{productsCategorized.name}</Text>
+        <Text style={styles.stickyText}>{productsCategorized.category}</Text>
       </View>}>
         <View style={styles.detailContainer}>
-        <Text style={styles.restName}>{productsCategorized.name}</Text>
+        <Text style={styles.restName}>{productsCategorized.category}</Text>
         <Text style={styles.restAbout}>{productsCategorized.description}</Text>
         <View style={{flexDirection: 'row',flex:1}}>
         <Image style={styles.bike} source={require('../assets/images/applebike.png')} /> 
