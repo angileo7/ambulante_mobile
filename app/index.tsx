@@ -29,11 +29,11 @@ const Login = () => {
 
     if (success) {
         showMessage({ message: 'User Registered Successfully', type: 'success' });
-       // setTimeout(() => navigation.replace('LoginScreen'), 2000);
+        setTimeout(() => navigation.navigate('dashboard'), 2000);
     }
 
     if (error) {
-        showMessage({ message: error, type: 'success' });
+        showMessage({ message: 'blaaaa' + error, type: 'danger' });
     }
 }, [error, navigation, resetStore, success])
 
@@ -45,10 +45,8 @@ const Login = () => {
     try {
       setMessage(null);
       // call backend
-       login(credentials); 
-      // move to next page
-        //moveTo('order');
-   //     navigation.navigate('dashboard');
+      login(credentials); 
+
       setSubmitting(false);
     } catch (error) {
       setMessage('Login failed: ' + error.message);

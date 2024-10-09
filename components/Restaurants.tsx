@@ -3,23 +3,26 @@ import React from 'react'
 import { restaurants } from '../assets/data/home'
 import { Link } from 'expo-router'
 import Colors from '../constants/Colors'
+import { Product } from 'types/product/types'
 
-const Restaurants = () => {
+const Restaurants = ({ categories = [], setProductsCategorized }) => {
+    const onPressHandler = (category: string, products: Product[]) => {
+        setProductsCategorized(category, products)
+    }
+
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}
     contentContainerStyle={{
         paddingHorizontal:16
     }}
     >
-      {restaurants.map((item, index) => (
-            <Link href={'/details'} asChild key={index}>
+      {categories.map((item: {name: string, productsCategorized: Product[]}, index) => ( //category tyoe
+            <Link href={'/details'} asChild key={index} onPress={() => onPressHandler(item.name, item.productsCategorized)}>
                 <TouchableOpacity>
                     <View style={styles.card}>
                         <Image source={item.img} style={styles.img} />
                             <View style={styles.restBox}>
                                 <Text style={styles.cardTxt}>{item.name}</Text>
-                                <Text style={{color: Colors.mediumDark }}>{item.rating} {item.ratings}</Text>
-                                <Text style={{color: Colors.green }}>{item.distance}</Text>
                             </View>
                     </View>
                 </TouchableOpacity>

@@ -1,7 +1,7 @@
 import {create } from 'zustand';
 
 export interface Product {
-    id: number;
+    _id: string;
     name: string;
     price: number;
     info: string;
@@ -30,7 +30,7 @@ const useBasketStore = create<BasketState>()((set, get) => ({
       set((state) => {
         state.items += 1;
         state.total += product.price;
-        const hasProduct = state.products.find((p) => p.id === product.id);
+        const hasProduct = state.products.find((p) => p._id === product._id);
   
         if (hasProduct) {
           hasProduct.quantity += 1;

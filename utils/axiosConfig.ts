@@ -10,14 +10,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
     (config) => {
         if (config) {
-            const { accessToken, user } = useAuthStoreAxiosState();
+            const { accessToken } = useAuthStoreAxiosState();
 
-            if (accessToken && user) {
-                const userID = JSON.parse((user as any).password).id;
-
-                config.headers["Authorization"] = `Bearer ${accessToken.password}`;
+            if (accessToken) {
+                config.headers["Authorization"] = `Bearer ${accessToken}`;
                 config.headers["Content-Type"] = "application/json";
-                config.headers["user_id"] = userID || null;
             }
 
             return config;

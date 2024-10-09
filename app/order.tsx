@@ -1,9 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
 import OrderItem from '../Components/List/OrderItem'
+import { useOrderStore } from 'store/order';
 
 const Page = () => {
   const [tasks, setTasks] = useState(['BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2','BLA', 'BLA2']);
+  const {orders, loadOrders} = useOrderStore();
+
+  useEffect(() => {
+    loadOrders();
+  }, []);
 
   const deleteTask = (deleteIndex) => {
     setTasks(tasks.filter((value, index) => index != deleteIndex));
@@ -14,10 +20,10 @@ const Page = () => {
         <Text style={styles.heading}>Orders</Text>
       <ScrollView style={styles.scrollView}>
         {
-        tasks.map((task, index) => {
+        orders && orders.length >0 && orders.map((order, index) => {
           return (
             <View key={index} style={styles.taskContainer}>
-              <OrderItem index={index + 1} task={task} deleteTask={() => deleteTask(index)}/>
+              <OrderItem index={index + 1} order={order} deleteTask={() => deleteTask(index)}/>
             </View>
           );
         })

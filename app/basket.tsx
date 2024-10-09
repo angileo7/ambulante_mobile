@@ -45,7 +45,7 @@ const Basket = () => {
             <GmailStyleSwipeableRow onDelete={() => reduceProduct(item)} >
               <View style={styles.row}>
                   <Text style={{ fontSize:18}}>{item.quantity} x</Text>
-                  <Text style={{ fontSize:18,flex:1, marginHorizontal: 16}}>{item.name}</Text>
+                  <Text style={{ fontSize:18,flex:1, marginHorizontal: 16}}>{item.title}</Text>
                   <Text style={{ fontSize:18}}>$ {item.price}</Text>
               </View>
             </GmailStyleSwipeableRow>

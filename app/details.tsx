@@ -2,11 +2,11 @@ import { View, Text,StyleSheet, Image, TouchableOpacity, SectionList, ListRender
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import ParallaxScrollView from '../Components/Parallax'
 import Colors from '../constants/Colors'
-import { restaurant } from '../assets/data/restaurant'
 import { Link, useNavigation } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import useBasketStore from '../store/basket'
+import { useProductStore } from 'store/product';
 
 const Details = () => {
     const navigation = useNavigation()
@@ -26,9 +26,10 @@ const Details = () => {
         }
     }
 
-    const {items, total} = useBasketStore()
+    const {items, total} = useBasketStore();
+    const {productsCategorized} = useProductStore();
 
-    const DATA= restaurant.food.map((item,index)=>({
+    const DATA= [productsCategorized].map((item,index)=>({
             title: item.category,
             data: item.meals,
             index
@@ -38,11 +39,11 @@ const Details = () => {
     const itemsRef = useRef<TouchableOpacity[]>([])
 
     const renderItem: ListRenderItem<any> = ({item, index}) => (
-      <Link href={{ pathname: '(modal)/dish', params: { id: item.id } }}  asChild>
+      <Link href={{ pathname: '(modal)/dish', params: { id: item._id } }}  asChild>
         <TouchableOpacity style={styles.card}>
           <View style={{flex:1}}>
-            <Text style={styles.cardTxt}>{item.name}</Text>
-            <Text style={styles.cardInfo}>{item.info}</Text>
+            <Text style={styles.cardTxt}>{item.title}</Text>
+            <Text style={styles.cardInfo}>{item.description}</Text>
             <Text style={styles.cardPrice}>${item.price}</Text>
           </View>
             <Image source={item.img} style={styles.img} />
@@ -91,25 +92,23 @@ const Details = () => {
       scrollEvent={onScroll}
       style={{ flex: 1 }}
       backgroundColor={'#fff'}
-      renderBackground={() => (
+/*       renderBackground={() => (
           <Image style={{width: '100%', height: 250}} source={restaurant.img} />
-      )}
+      )} */
       parallaxHeaderHeight={250}
       stickyHeaderHeight={120}
       contentBackgroundColor={Colors.lightGrey}
       renderStickyHeader={() => <View key='sticky-header' style={styles.headerStick}>
-        <Text style={styles.stickyText}>{restaurant.name}</Text>
+        <Text style={styles.stickyText}>{productsCategorized.name}</Text>
       </View>}>
         <View style={styles.detailContainer}>
-        <Text style={styles.restName}>{restaurant.name}</Text>
-        <Text style={styles.restAbout}>{restaurant.about}</Text>
+        <Text style={styles.restName}>{productsCategorized.name}</Text>
+        <Text style={styles.restAbout}>{productsCategorized.description}</Text>
         <View style={{flexDirection: 'row',flex:1}}>
         <Image style={styles.bike} source={require('../assets/images/applebike.png')} /> 
-        <Text style={styles.restTag}>Delivery: {restaurant.delivery} </Text>
         </View>
-        <Text style={styles.restTags}> {restaurant.tags.map((item, index) => `${item}${index < restaurant.tags.length - 1 ? ' • ' : ''}`)}</Text>
         
-        <SectionList contentContainerStyle={{paddingBottom: 50}} keyExtractor={(item,index)=> `${index + item.id}`} scrollEnabled={false} sections={DATA} renderItem={renderItem}
+        <SectionList contentContainerStyle={{paddingBottom: 50}} keyExtractor={(item,index)=> `${index + item._id}`} scrollEnabled={false} sections={DATA} renderItem={renderItem}
         
         ItemSeparatorComponent={() => <View style={{height: 1,backgroundColor: Colors.grey,marginHorizontal: 20}}/>}
         SectionSeparatorComponent={() => <View style={{height: 1,backgroundColor: Colors.grey}}/>}
@@ -119,20 +118,6 @@ const Details = () => {
         />
         </View>
       </ParallaxScrollView>
-
-{/* Sticky Slider */}
-      <Animated.View style={[styles.stickySlider, animatedStyles]} >
-          <View style={styles.sliderShadow}>
-
-            <ScrollView ref={scrollRef} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: 16, alignItems: 'center',gap:20,paddingBottom: 4}}>
-           {restaurant.food.map((item, index) => (
-             <TouchableOpacity ref={(ref) => itemsRef.current[index] = ref!} key={index} style={activeIndex === index ? styles.sliderBtnActive : styles.sliderBtn} onPress={() => selectedCategory(index)}>
-               <Text style={activeIndex === index ? styles.sliderBtnTxtActive : styles.sliderBtnTxt}>{item.category}</Text>
-             </TouchableOpacity>
-           ))}
-            </ScrollView>
-          </View>
-      </Animated.View>
 
       {/* Basket */}
 

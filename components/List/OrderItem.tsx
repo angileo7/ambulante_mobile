@@ -1,15 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, } from "react-native";
+import { Product } from '../../types/product/types'
 import { MaterialIcons } from '@expo/vector-icons';
 
 const OrderItem = (props) => {
+    const getDescription = (products: Product[]): string => {
+        const counts = {};
+        products.forEach(function (product: Product) { counts[product.title] = (counts[product.title] || 0) + 1 })
+        return Object.keys(counts).map(key => `${counts[key]} ${key}`).join(", ");
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.indexContainer}>
                 <Text style={styles.index}>{props.index}</Text>
             </View>
             <View style={styles.taskContainer}>
-                <Text style={styles.task}>{props.task}</Text>
+                <Text>{getDescription(props.order.products)}</Text>
                 <TouchableOpacity onPress={() => props.deleteTask()}>
                     <MaterialIcons style={styles.delete} name="delete" size={18} color='#fff' />
                 </TouchableOpacity>
@@ -43,17 +50,14 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       alignItems: 'center',
       flex: 1,
-      paddingHorizontal: 10,
+      paddingHorizontal: 5,
       paddingVertical: 5,
       minHeight: 50,
   },
   task: {
     color: '#fff',
     width: '90%',
-    fontSize: 16,
-},
-delete: {
-    marginLeft: 10,
+    fontSize: 10,
 },
 });
 

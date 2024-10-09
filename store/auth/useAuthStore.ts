@@ -2,8 +2,8 @@
 
 import { createWithEqualityFn } from 'zustand/traditional'
 import { InitialStateProps } from './interfaces';
-import * as Keychain from 'react-native-keychain';
 import AxiosConfig from '../../utils/axiosConfig';
+import { getItem, setItem } from '../../utils/AsyncStorage'
 
 const initialState = {
     user: null,
@@ -15,23 +15,23 @@ const initialState = {
 
 const useAuthStore = createWithEqualityFn<InitialStateProps>()((set) => {
     const getAccessToken = async () => {
-        const credentials = await Keychain.getInternetCredentials('accessToken');
+        const credentials = await getItem('accessToken');
 
-        if (credentials) {
+         if (credentials) {
             return credentials;
         } else {
             return null;
-        }
+        } 
     }
 
     const getUser = async () => {
-        const user = await Keychain.getInternetCredentials('user');
+      //  const user = await Keychain.getInternetCredentials('user');
 
-        if (user) {
+/*         if (user) {
             return user;
         } else {
             return null;
-        }
+        } */
     }
 
     getAccessToken().then((initialAccessToken) => {
@@ -39,7 +39,7 @@ const useAuthStore = createWithEqualityFn<InitialStateProps>()((set) => {
     });
 
     getUser().then((userData) => {
-        set((state) => ({ ...state, user: userData }));
+       // set((state) => ({ ...state, user: userData }));
     });
 
     return {
@@ -57,12 +57,8 @@ const useAuthStore = createWithEqualityFn<InitialStateProps>()((set) => {
             })
                 .then(async (loginResponse) => {
                     const userData = loginResponse.data;
-/*                     await Keychain.setInternetCredentials(
-                        'user', 'user', JSON.stringify(userData.username)
-                    ); */
-                    await Keychain.setInternetCredentials(
-                        'accessToken', 'accessToken', userData.token
-                    ); 
+                    await setItem('username', userData.username);
+                    await setItem('accessToken', userData.token);
 
                     set((state) => ({
                         ...state,
@@ -111,8 +107,8 @@ const useAuthStore = createWithEqualityFn<InitialStateProps>()((set) => {
         },
 
         logout: async () => {
-            await Keychain.resetInternetCredentials('user');
-            await Keychain.resetInternetCredentials('accessToken');
+       //     await Keychain.resetInternetCredentials('user');
+         //   await Keychain.resetInternetCredentials('accessToken');
 
             set(initialState);
         }
@@ -120,3 +116,5 @@ const useAuthStore = createWithEqualityFn<InitialStateProps>()((set) => {
 });
 
 export default useAuthStore;
+
+
