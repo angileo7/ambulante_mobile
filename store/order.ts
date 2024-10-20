@@ -3,13 +3,13 @@
 import { create } from "zustand";
 import { Order, OrderStore } from "../types/order/types";
 import AxiosConfig from "../utils/axiosConfig";
-// import { createProduct, deleteProduct, fetchProducts, updateProduct } from "./api";
 
 const initialState = {
     orders: [],
     loading: false,
     error: null,
     success: false,
+    order: undefined
 }
 
 export const useOrderStore = create<OrderStore>()((set) => ({
@@ -32,6 +32,25 @@ export const useOrderStore = create<OrderStore>()((set) => ({
                 set((state) => ({ ...state, loading: false }));
             });
     },
+    loadOneOrder: async (id: string) => {
+        set((state) => ({ ...state, loading: true }));
+        AxiosConfig.get('/orders/'+id)
+            .then((response) => {
+                set((state) => ({ ...state, error: null, success: true, order: response.data }));
+                return response.data;
+            })
+            .catch((errorResponse) => {
+                set((state) => ({
+                    ...state,
+                    success: false,
+                    error: errorResponse.response?.data?.message || errorResponse.message,
+                    order: undefined
+                }));
+            })
+            .finally(() => {
+                set((state) => ({ ...state, loading: false }));
+            });
+    },
     createOneOrder: async (newProduct: Order) => {
         set((state) => ({ ...state, loading: true }));
         AxiosConfig.post('/orders', {
@@ -41,7 +60,7 @@ export const useOrderStore = create<OrderStore>()((set) => ({
             description: 'from app XD'
         })
             .then((response) => {
-                //set((state) => ({ ...state, error: null, success: true, orders: [...state.orders, response.data ]}));
+                set((state) => ({ ...state, error: null, success: true, order: undefined}));
             })
             .catch((errorResponse) => {
                 set((state) => ({
@@ -56,11 +75,15 @@ export const useOrderStore = create<OrderStore>()((set) => ({
     },
     updateOneOrder: async (updatedProduct: Order) => {
         set((state) => ({ ...state, loading: true }));
-        AxiosConfig.put('/orders')
+        AxiosConfig.put('/orders', {
+            id: updatedProduct.id,
+            products: [...updatedProduct.products],
+        })
             .then((response) => {
-                set((state) => ({ ...state, error: null, success: true, orders: [...state.orders, response.data ]}));
+                set((state) => ({ ...state, error: null, success: true, order: undefined}));
             })
             .catch((errorResponse) => {
+                console.log('error', errorResponse)
                 set((state) => ({
                     ...state,
                     success: false,

@@ -1,51 +1,55 @@
 import { View, Text, FlatList,StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useBasketStore from '../store/basket'
 import { useOrderStore } from '../store/order'
 import Colors from '../constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { Link } from 'expo-router'
+import { Link, useLocalSearchParams } from 'expo-router'
 import GmailStyleSwipeableRow from '../Components/Swipe'
 
-
 const Basket = () => {
-    const {items, total, clearCart, products,reduceProduct,addProduct} = useBasketStore()
-    const { createOneOrder, updateOneOrder } = useOrderStore();
-    const [order, setOrder] = useState(false)
-
-    const Fee = {
-        service: 2.99,
-        delivery: 4.99,
-    }
+    const {total, clearCart, products, reduceProduct} = useBasketStore()
+    const { createOneOrder, updateOneOrder, order } = useOrderStore();
+    const [isOrderSet, setIsOrderSet] = useState(false)
+    // const params = useLocalSearchParams();
+   // const { id  } = params;
 
     const checkout = () => {
-      createOneOrder({
-        products: products
-      })
-        setOrder(true)
-        clearCart()
+      if(order?._id)
+        updateOneOrder({
+          id: order?._id,
+          products: products
+        })
+      else
+        createOneOrder({
+          products: products
+        })
+
+      setIsOrderSet(true)
+      clearCart()
     }
+
   return (
     <>
-      {order && (
+      {isOrderSet && (
           <ConfettiCannon count={200} origin={{x: -10, y: 0}} fallSpeed={3000} fadeOut={true} autoStart={true}  />
       )}
-      {order && (
+      {isOrderSet && (
         <View style={{marginTop:'50%', padding:20,alignItems:'center'}}>
             <Text style={{ fontSize: 24, fontWeight: 'bold',marginVertical: 8, marginLeft: 16}}>Your Order is Confirmed</Text>
             <Text style={{ fontSize: 18, fontWeight: 'bold',marginVertical: 8, marginLeft: 16}}>Thank you for your order!</Text>
-            <Link href={'/'} asChild>
+            <Link href={'/dashboard'} asChild>
                 <TouchableOpacity style={styles.btn}>
                     <Text style={styles.btnTxt}>Back to Home</Text>
                 </TouchableOpacity>
             </Link>
         </View>
       )}
-      {!order && (
+      {!isOrderSet && (
           <>
           <FlatList data={products} 
-          ListHeaderComponent={<Text style={{ fontSize: 24, fontWeight: 'bold',marginVertical: 8, marginLeft: 16}}>Added Items</Text>}
+          ListHeaderComponent={<Text style={{ fontSize: 24, fontWeight: 'bold',marginVertical: 8, marginLeft: 16}}>Added Items: {order?._id}</Text>}
           renderItem={({item}) => (
             <GmailStyleSwipeableRow onDelete={() => reduceProduct(item)} >
               <View style={styles.row}>
@@ -64,12 +68,11 @@ const Basket = () => {
 
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 16, backgroundColor: '#fff'}}>
                     <Text style={{ fontSize:16, color:Colors.mediumDark, fontWeight: 'bold'}}>Total Order</Text>
-                    <Text style={{ fontSize:16, color:Colors.mediumDark,fontWeight: 'bold'}}>$ {(total + Fee.service + Fee.delivery).toFixed(2)}</Text>
+                    <Text style={{ fontSize:16, color:Colors.mediumDark,fontWeight: 'bold'}}>$ {(total).toFixed(2)}</Text>
                 </View>
             </View>
           }
           />
-
           <View style={styles.footer}>
             <SafeAreaView edges={['bottom']} style={{backgroundColor: '#fff'}}>
                 <TouchableOpacity style={styles.btn} onPress={checkout} >

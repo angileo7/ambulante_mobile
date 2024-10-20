@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert, } from "react-native";
 import { Product } from '../../types/product/types'
 import { MaterialIcons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
 
 const OrderItem = (props) => {
     const getDescription = (products: Product[]): string => {
@@ -19,8 +20,25 @@ const OrderItem = (props) => {
                 <Text style={styles.index}>{props.index}</Text>
             </View>
             <View style={styles.taskContainer}>
-                <Text>{getDescription(props.order.products)}</Text>
-                <TouchableOpacity onPress={() => props.deleteTask()}>
+            {/* <Link href={'/basket'} asChild> 
+            <Link href={{ pathname: '/basket', params: { id: props.order._id } }} asChild>*/}
+              <TouchableOpacity style={styles.btn} onPress={props.loadOneOrder}>
+              <Text>{getDescription(props.order.products)}</Text>
+              </TouchableOpacity>
+{/*             </Link> */}
+
+                {/* <TouchableOpacity onPress={() => props.deleteTask()}> */}
+                <TouchableOpacity onPress={() => {
+                        Alert.alert(
+                            'Alert',
+                            'Are you sure you want to delete?',
+                            [
+                            {text: 'No', onPress:() => console.log('Cancel Pressed'), style: 'cancel'},
+                            {text: 'Yes', onPress:() => { props.deleteTask()}},
+                            ],
+                            { cancelable: true}
+                        )
+                    }}>
                     <MaterialIcons style={styles.delete} name="delete" size={18} color='#fff' />
                 </TouchableOpacity>
             </View>

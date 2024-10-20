@@ -1,10 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
 import OrderItem from '../Components/List/OrderItem'
 import { useOrderStore } from 'store/order';
+import useBasketStore from '../store/basket'
+import {  useNavigation } from 'expo-router';
 
 const Page = () => {
-  const {orders, loadOrders, deleteOneOrder} = useOrderStore();
+  const navigation = useNavigation()
+  const { orders, loadOrders, deleteOneOrder, loadOneOrder } = useOrderStore();
+  const { clearCart } = useBasketStore()
 
   useEffect(() => {
     loadOrders();
@@ -14,20 +18,26 @@ const Page = () => {
     deleteOneOrder(deleteIndex)
   }
 
+  const getOneOrder = async (deleteIndex: string) => {
+    clearCart();
+    loadOneOrder(deleteIndex);    // TODO: populate products after response is received here
+    navigation.navigate('orderView');
+  }
+
   return (
     <View style={styles.container}>
-        <Text style={styles.heading}>Orders</Text>
+      <Text style={styles.heading}>Orders</Text>
       <ScrollView style={styles.scrollView}>
         {
         orders.map((order, index) => {
           
           return order.status != 'completed' ?  (
             <View key={index} style={styles.taskContainer}>
-              <OrderItem index={index + 1} order={order} deleteTask={() => deleteTask(order._id)}/>
+              <OrderItem index={index + 1} order={order} deleteTask={() => deleteTask(order._id)} loadOneOrder={() => getOneOrder(order._id)}/>
             </View>
           ) : null;
-        })
-      }
+          })
+        }
       </ScrollView>
     </View>
   );

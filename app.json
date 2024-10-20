@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "woltaroo",
-    "slug": "woltaroo",
+    "name": "zurdo",
+    "slug": "zurdo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,13 +16,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.zurdo"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.zurdo"
     },
     "web": {
       "bundler": "metro",

@@ -9,6 +9,7 @@ export interface BasketState {
     clearCart: () => void;
     items: number;
     total: number;
+    setProductsFromRemote: (products: Array<Product & { quantity: number }>) => void;
 }
 
 const useBasketStore = create<BasketState>()((set, get) => ({
@@ -49,6 +50,9 @@ const useBasketStore = create<BasketState>()((set, get) => ({
             .filter((p) => p.quantity > 0),
         };
       });
+    },
+    setProductsFromRemote: (products) => {
+
     },
     clearCart: () => set({ products: [], items: 0, total: 0 }),
   }));

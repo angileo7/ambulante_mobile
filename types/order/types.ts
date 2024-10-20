@@ -13,9 +13,12 @@ export type Order = {
 export type OrderStore = {
     orders: Array<Order>,
     loadOrders: () => Promise<void>,
+    loadOneOrder: (id: string) => Promise<void>,
     createOneOrder: (value: Order) => Promise<void>,
     updateOneOrder: (value: Order) => Promise<void>,
-    deleteOneOrder: (id: string) => Promise<void>
+    deleteOneOrder: (id: string) => Promise<void>,
+    order?: Order
+    success: boolean
 }
 
 export type StoreSet =

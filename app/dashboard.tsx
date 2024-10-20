@@ -1,11 +1,12 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
-import {  useNavigation } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import Restaurants from '../Components/Restaurants'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Colors from '../constants/Colors'
 import PressableText from '../Components/Texts/PressableText'
 import { useProductStore } from 'store/product';
+
 const Page = () => {
   const navigation = useNavigation()
   const {
@@ -18,9 +19,8 @@ const Page = () => {
     navigation.navigate(screen, { ...payload });
   };
 
-  
   useEffect(() => {
-    loadProducts()
+    loadProducts();
   }, [])
 
   return (

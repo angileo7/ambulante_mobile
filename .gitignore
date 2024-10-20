@@ -18,3 +18,9 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+
+#gradle key
+android/app/my-upload-key.keystore
+android/gradle.properties
+android/
+ios/
