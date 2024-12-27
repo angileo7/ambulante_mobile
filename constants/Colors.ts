@@ -18,6 +18,7 @@ export default {
   },
   
     primary: '#20E1B2',
+    tertiary: 'red',
     lightGrey: '#fcf8ff',
     grey: '#eee9f0',
     medium: '#9f9aa1',

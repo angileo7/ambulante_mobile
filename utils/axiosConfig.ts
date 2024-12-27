@@ -3,7 +3,9 @@ import { useAuthStoreAxiosState } from '../store/auth/useAuthFacade';
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://ambulante-be.onrender.com/',
+    // baseURL: 'https://ambulante-be.onrender.com/',
+    // baseURL: 'http://localhost:3500/',
+    baseURL: process.env.EXPO_PUBLIC_API_URL,
     withCredentials: true
 });
 

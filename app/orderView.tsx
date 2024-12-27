@@ -33,7 +33,7 @@ const Basket = () => {
   return (
     <>
           <FlatList data={products} 
-          ListHeaderComponent={<Text style={{ fontSize: 24, fontWeight: 'bold',marginVertical: 8, marginLeft: 16}}>{order?._id}</Text>}
+          ListHeaderComponent={<Text style={{ fontSize: 24, fontWeight: 'bold',marginVertical: 8, marginLeft: 16}}></Text>}
           renderItem={({item}) => (
             <GmailStyleSwipeableRow onDelete={() => reduceProduct(item)} >
               <View style={styles.row}>
@@ -57,7 +57,7 @@ const Basket = () => {
                 </TouchableOpacity>
             </SafeAreaView> 
             <SafeAreaView edges={['bottom']} style={{backgroundColor: '#fff'}}>
-                <TouchableOpacity style={styles.btn} onPress={() => {cancelEditing()}} >
+                <TouchableOpacity style={styles.btnCancel} onPress={() => {cancelEditing()}} >
                     <Text style={styles.btnTxt}>Cancelar Edicion</Text>
                 </TouchableOpacity>
             </SafeAreaView> 
@@ -89,6 +89,18 @@ const styles = StyleSheet.create({
        flexDirection: 'row',
        height: 50
      },
+     btnCancel:{ 
+      backgroundColor: Colors.tertiary,
+     paddingHorizontal: 2,
+     borderRadius: 8,
+     alignItems: 'center',
+     justifyContent: 'space-between',
+     marginBottom: 16,
+     marginTop: 16,
+     width: '100%',
+     flexDirection: 'row',
+     height: 50
+   },
     footer:{
         position: 'absolute',
         backgroundColor: '#fff',

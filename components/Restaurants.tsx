@@ -1,9 +1,8 @@
 import { View, Text, ScrollView,StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { restaurants } from '../assets/data/home'
 import { Link } from 'expo-router'
-import Colors from '../constants/Colors'
 import { Product } from 'types/product/types'
+import { CATEGORIES }from '../assets/images/ImageCollection'
 
 const Restaurants = ({ categories = [], setProductsCategorized }) => {
     const onPressHandler = (category: string, products: Product[]) => {
@@ -16,11 +15,11 @@ const Restaurants = ({ categories = [], setProductsCategorized }) => {
         paddingHorizontal:16
     }}
     >
-      {categories.map((item: {name: string, productsCategorized: Product[]}, index) => ( //category tyoe
-            <Link href={'/details'} asChild key={index} onPress={() => onPressHandler(item.name, item.productsCategorized)}>
+      {categories.map((item: {name: string, img: string, productsCategorized: Product[]}, index) => ( //category tyoe
+            <Link href={{ pathname: 'details', params: { name: item.name } }} asChild key={index} onPress={() => onPressHandler(item.name, item.productsCategorized)}>
                 <TouchableOpacity>
                     <View style={styles.card}>
-                        <Image source={item.img} style={styles.img} />
+                        <Image source={CATEGORIES[item.name]?.img} style={styles.img}/>
                             <View style={styles.restBox}>
                                 <Text style={styles.cardTxt}>{item.name}</Text>
                             </View>

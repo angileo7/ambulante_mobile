@@ -1,4 +1,4 @@
-import { View, Text, FlatList,StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, FlatList,StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import useBasketStore from '../store/basket'
 import { useOrderStore } from '../store/order'
@@ -6,14 +6,24 @@ import Colors from '../constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { Link, useLocalSearchParams } from 'expo-router'
+import { useAuthFacade } from '../store/auth/useAuthFacade';
 import GmailStyleSwipeableRow from '../Components/Swipe'
+import { colors } from 'Components/colors';
+import StyledTextInput from 'Components/Inputs/StyledTextInput'
+const { primary, secondary, tertiary } = colors;
 
 const Basket = () => {
     const {total, clearCart, products, reduceProduct} = useBasketStore()
-    const { createOneOrder, updateOneOrder, order } = useOrderStore();
+    const { createOneOrder, updateOneOrder, order, loading } = useOrderStore();
+    const { user} = useAuthFacade();
     const [isOrderSet, setIsOrderSet] = useState(false)
+    const [nombre, setNombre] = useState('')
     // const params = useLocalSearchParams();
    // const { id  } = params;
+
+   const  handleChange = (event) => {
+    setNombre(event);
+};
 
     const checkout = () => {
       if(order?._id)
@@ -23,8 +33,11 @@ const Basket = () => {
         })
       else
         createOneOrder({
-          products: products
-        })
+          products: products, 
+        },
+        user.current_journey,
+        nombre
+      )
 
       setIsOrderSet(true)
       clearCart()
@@ -61,6 +74,18 @@ const Basket = () => {
           )}
           ListFooterComponent={
             <View>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: '#fff'}}>
+              <StyledTextInput
+                label="Nombre"
+                icon="account-circle-outline"
+                placeholder="nombre de la persona"
+                onChangeText={handleChange}
+                //onBlur={handleBlur('password')}
+                value={nombre}
+                isPassword={false}
+                style={{ marginBottom: 25 }}
+              />
+              </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 16, backgroundColor: '#fff'}}>
                     <Text style={{ fontSize:16, color:Colors.medium}}>Subtotal</Text>
                     <Text style={{ fontSize:16, color:Colors.medium}}>$ {total}</Text>
@@ -75,9 +100,13 @@ const Basket = () => {
           />
           <View style={styles.footer}>
             <SafeAreaView edges={['bottom']} style={{backgroundColor: '#fff'}}>
-                <TouchableOpacity style={styles.btn} onPress={checkout} >
+            { !loading && <TouchableOpacity style={styles.btn} onPress={checkout} >
                     <Text style={styles.btnTxt}>Place Order</Text>
                 </TouchableOpacity>
+            }
+                {loading && (
+                  <ActivityIndicator size="small" color={secondary} animating={true}/>
+              )}
             </SafeAreaView> 
           </View>
           </>

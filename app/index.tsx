@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import {  useNavigation } from 'expo-router';
 
 import { colors } from '../Components/colors';
@@ -20,7 +20,7 @@ import { useAuthFacade } from '../store/auth/useAuthFacade';
 
 const Login = () => {
   const navigation = useNavigation()
-  const { login, loading, success, error, resetStore } = useAuthFacade();
+  const { login, loading, error, success, resetStore } = useAuthFacade();
   const [message, setMessage] = useState('');
   const [isSuccessMessage, setIsSuccessMessage] = useState(false);
 
@@ -58,7 +58,7 @@ const Login = () => {
     <MainContainer>
       <KeyboardAvoidingContainer>
         <RegularText style={{ marginBottom: 25 }}>Enter your account credentials</RegularText>
-
+        <View>process.env.EXPO_PUBLIC_API_URL</View>
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={(values, { setSubmitting }) => {
@@ -70,17 +70,18 @@ const Login = () => {
             }
           }}
         >
-          {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
+          {({ handleChange, handleBlur, handleSubmit, values }) => (
             <>
               <StyledTextInput
                 label="Email Address"
                 icon="email-variant"
-                placeholder="walt14@gmail.com"
+                placeholder="nombredetienda@correo.com"
                 keyboardType="email-address"
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
                 value={values.email}
                 style={{ marginBottom: 25 }}
+                isPassword={false}
               />
 
               <StyledTextInput
@@ -97,8 +98,8 @@ const Login = () => {
               <MsgBox style={{ marginBottom: 25 }} success={isSuccessMessage}>
                 {message || ' '}
               </MsgBox>
-              {!isSubmitting && <RegularButton onPress={handleSubmit}>Login</RegularButton>}
-              {isSubmitting && (
+              {!loading && <RegularButton onPress={handleSubmit}>Login</RegularButton>}
+              {loading && (
                 <RegularButton disabled={true}>
                   <ActivityIndicator size="small" color={primary} />
                 </RegularButton>

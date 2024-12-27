@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "zurdo",
-    "slug": "zurdo",
+    "slug": "pedidos",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -37,6 +37,12 @@
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "51155514-9aee-4f9d-a0f9-1613cbf9de3c"
+      }
+    },
+    "owner": "angileo7"
   }
 }

@@ -51,13 +51,14 @@ export const useOrderStore = create<OrderStore>()((set) => ({
                 set((state) => ({ ...state, loading: false }));
             });
     },
-    createOneOrder: async (newProduct: Order) => {
+    createOneOrder: async (newProduct: Order, current_journey: string, owner_name: string) => {
         set((state) => ({ ...state, loading: true }));
         AxiosConfig.post('/orders', {
             client: '6640869761756c4ab7faa4c9',
             products: [...newProduct.products],
-            owner_name: 'owner from app XD',
-            description: 'from app XD'
+            owner_name,
+            description: 'from app XD',
+            current_journey
         })
             .then((response) => {
                 set((state) => ({ ...state, error: null, success: true, order: undefined}));

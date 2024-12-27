@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert, ActivityIndicator, } from "react-native";
 import { Product } from '../../types/product/types'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
+import { colors } from 'Components/colors';
+const { primary, secondary, tertiary } = colors;
 
 const OrderItem = (props) => {
     const getDescription = (products: Product[]): string => {
@@ -17,14 +19,20 @@ const OrderItem = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.indexContainer}>
-                <Text style={styles.index}>{props.index}</Text>
+                <Text style={styles.index}>{props.order.owner_name}</Text>
             </View>
-            <View style={styles.taskContainer}>
+            {props.loading && (
+                  <ActivityIndicator size="large" color={secondary} animating={true}/>
+              )}
+            {!props.loading && (
+                <View style={styles.taskContainer}>
             {/* <Link href={'/basket'} asChild> 
             <Link href={{ pathname: '/basket', params: { id: props.order._id } }} asChild>*/}
-              <TouchableOpacity style={styles.btn} onPress={props.loadOneOrder}>
-              <Text>{getDescription(props.order.products)}</Text>
-              </TouchableOpacity>
+              
+                  <TouchableOpacity style={styles.btn} onPress={props.loadOneOrder}>
+                  <Text>{getDescription(props.order.products)}</Text>
+                  </TouchableOpacity>
+              
 {/*             </Link> */}
 
                 {/* <TouchableOpacity onPress={() => props.deleteTask()}> */}
@@ -42,6 +50,7 @@ const OrderItem = (props) => {
                     <MaterialIcons style={styles.delete} name="delete" size={18} color='#fff' />
                 </TouchableOpacity>
             </View>
+            )}
         </View> 
     );
 }

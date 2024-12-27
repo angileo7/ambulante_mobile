@@ -64,7 +64,7 @@ const useAuthStore = createWithEqualityFn<InitialStateProps>()((set) => {
                         ...state,
                         error: null,
                         success: true,
-                        user: userData.username,
+                        user: userData,
                         accessToken: userData.token
                     }));
                 })

@@ -5,6 +5,7 @@ import Colors from '../constants/Colors'
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import FlashMessage from "react-native-flash-message";
+import useBasketStore from 'store/basket';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -14,6 +15,7 @@ export const unstable_settings = {
 
 
 export default function RootLayoutNav() {
+  const { clearCart } = useBasketStore()
  const navigation = useNavigation()
 
   return (
@@ -50,6 +52,9 @@ export default function RootLayoutNav() {
                   <Ionicons name="arrow-back"  size={30} color={Colors.primary} />
               </TouchableOpacity>
             )
+         }} />
+          <Stack.Screen name="orderView" options={{
+            headerShown:false
          }} />
       </Stack>
             {/* GLOBAL FLASH MESSAGE COMPONENT INSTANCE */}

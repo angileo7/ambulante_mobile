@@ -7,15 +7,21 @@ import { Ionicons } from '@expo/vector-icons'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import useBasketStore from '../store/basket'
 import { useProductStore } from 'store/product';
+import { MEALS }from '../assets/images/ImageCollection'
+import { CATEGORIES }from '../assets/images/ImageCollection'
+import { useRoute } from '@react-navigation/native'
+import { useAuthFacade } from '../store/auth/useAuthFacade';
 
 const Details = () => {
-    const navigation = useNavigation()
-    const [activeIndex, setActiveIndex] = useState(0)
-
-    const opacity = useSharedValue(0)
+    const route = useRoute();
+    const navigation = useNavigation();
+    const [activeIndex, setActiveIndex] = useState(0);
+    const { user} = useAuthFacade();
+    const { name } = route.params;
+    const opacity = useSharedValue(0);
     const animatedStyles = useAnimatedStyle(() => ({
         opacity: opacity.value
-    }))
+    }));
 
     const onScroll = (event: any) => {
         const yOffset = event.nativeEvent.contentOffset.y
@@ -38,7 +44,8 @@ const Details = () => {
     const scrollRef = useRef<ScrollView>(null)
     const itemsRef = useRef<TouchableOpacity[]>([])
 
-    const renderItem: ListRenderItem<any> = ({item, index}) => (
+    const renderItem: ListRenderItem<any> = ({item, index}) => {
+      if(item.store == user?._id) return(
       <Link href={{ pathname: '(modal)/dish', params: { id: item._id } }}  asChild>
         <TouchableOpacity style={styles.card}>
           <View style={{flex:1}}>
@@ -46,11 +53,14 @@ const Details = () => {
             <Text style={styles.cardInfo}>{item.description}</Text>
             <Text style={styles.cardPrice}>${item.price}</Text>
           </View>
-            <Image source={item.img} style={styles.img} />
+            <Image source={MEALS[item.img.split('.')[0]]?.img} style={styles.img} />
            
         </TouchableOpacity>
       </Link>
     )
+  else
+  return null
+}
 
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -92,9 +102,9 @@ const Details = () => {
       scrollEvent={onScroll}
       style={{ flex: 1 }}
       backgroundColor={'#fff'}
-/*       renderBackground={() => (
-          <Image style={{width: '100%', height: 250}} source={restaurant.img} />
-      )} */
+       renderBackground={() => (
+          <Image style={{width: '100%', height: 250}} source={CATEGORIES[name]?.img} />
+      )} 
       parallaxHeaderHeight={250}
       stickyHeaderHeight={120}
       contentBackgroundColor={Colors.lightGrey}
